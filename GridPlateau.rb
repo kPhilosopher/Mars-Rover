@@ -27,10 +27,6 @@ class GridPlateau < Plateau
 	public
 
 	def state_at_coordinate(coordinate)
-		# if coordinate.x > @maximum_coordinate.x || coordinate.y > @maximum_coordinate.y || coordinate.x < 0 || coordinate.y < 0
-		# 	return OffThePlateau
-		# end
-
 		grid = grid_at_coordinate(coordinate)
 		return OffThePlateau if grid == nil
 		return grid.state
