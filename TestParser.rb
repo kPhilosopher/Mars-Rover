@@ -17,7 +17,7 @@ class TestParser
 		end
 	end
 
-	def test_no_such_file_cant_be_opened
+	def test_non_existant_file_cant_be_opened
 		file_path = File.expand_path(File.dirname(__FILE__) + '/no_such_file.txt')
 		assert_raise(Errno::ENOENT) do
 		 Parser.new(file_path)
@@ -239,7 +239,7 @@ class TestParser
 		end
 	end
 
-	def test_text_file_that_is_empty
+	def test_check_format_with_text_file_that_is_empty
 		text_file_name = "input_with_nothing.txt"
 		content = ""
 
@@ -257,7 +257,7 @@ class TestParser
 		end
 	end
 
-	def test_text_file_that_has_one_line
+	def test_check_format_with_text_file_that_has_empty_line
 		text_file_name = "input_with_one_line.txt"
 		content = "\n"
 
@@ -275,7 +275,7 @@ class TestParser
 		end
 	end
 
-	def test_text_file_has_no_rover_and_no_instruction_set
+	def test_check_format_with_no_rover_and_no_instruction_set
 		text_file_name = "input_with_just_maximum_coordinate.txt"
 		content = "5 5"
 
@@ -293,7 +293,7 @@ class TestParser
 		end
 	end
 
-	def test_text_file_has_one_rover_and_no_instruction_set
+	def test_check_format_with_one_rover_and_no_instruction_set
 		text_file_name = "input_with_maximum_coordinate_and_just_a_rover.txt"
 		content = "5 5\n3 4 N"
 
@@ -311,7 +311,7 @@ class TestParser
 		end
 	end
 
-	def test_text_file_has_negative_maximum_coordinate
+	def test_check_format_with_negative_maximum_coordinate
 		text_file_name = "input_with_negative_coordinate.txt"
 		content = "5 -5\n3 4 N\nMLLRMM"
 
@@ -328,24 +328,22 @@ class TestParser
 		end
 	end
 
-	def test_text_file_has_maximum_size_coordinates
+	def test_extract_coordinate
 		file_path = File.expand_path(File.dirname(__FILE__) + '/input.txt')
 		file = Parser.new(file_path)
-		file.check_format
-		maximum_coordinate = file.extract_coordinates
+		maximum_coordinate = file.extract_coordinate
 		assert_equal true, maximum_coordinate.x >= 0
 		assert_equal true, maximum_coordinate.y >= 0
 	end
 
-	def test_text_file_has_first_rover_and_its_instruction_set
+	def test_extract_rovers_and_its_instruction_set
 		file = Parser.new(filePath = File.expand_path(File.dirname(__FILE__) + '/input.txt'))
-		file.check_format
-		file.extract_rovers_and_its_instruction_set
-		file.rovers.each { |rover|
-			assert_not_nil rover[0][/\d+/]
-			assert_not_nil rover[1][/\d+/]
-			assert_not_nil rover[2][/\w/]
-			assert_not_nil rover[3][/[MLR]+/]
+		rovers = file.extract_rovers_and_its_instruction_set
+		rovers.each { |rover|
+			assert_not_nil rover[0][/^\d+$/]
+			assert_not_nil rover[1][/^\d+$/]
+			assert_not_nil rover[2][/^\w$/]
+			assert_not_nil rover[3][/^[MLR]+$/]
 		}
 	end
 end
@@ -354,7 +352,7 @@ end
 
 parsing_tester = TestParser.new
 parsing_tester.test_text_file_is_opened_and_read
-parsing_tester.test_no_such_file_cant_be_opened
+parsing_tester.test_non_existant_file_cant_be_opened
 parsing_tester.test_check_format
 parsing_tester.test_check_format_with_irrelevant_extra_lines
 parsing_tester.test_check_format_with_first_line_error
@@ -367,10 +365,10 @@ parsing_tester.test_check_format_with_rover_line_missing
 parsing_tester.test_check_format_with_instruction_line_missing_01
 parsing_tester.test_check_format_with_instruction_line_missing_02
 parsing_tester.test_check_format_with_rover_line_and_instruction_line_mixed_up
-parsing_tester.test_text_file_that_is_empty
-parsing_tester.test_text_file_that_has_one_line
-parsing_tester.test_text_file_has_no_rover_and_no_instruction_set
-parsing_tester.test_text_file_has_one_rover_and_no_instruction_set
-parsing_tester.test_text_file_has_maximum_size_coordinates
-parsing_tester.test_text_file_has_negative_maximum_coordinate
-parsing_tester.test_text_file_has_first_rover_and_its_instruction_set
+parsing_tester.test_check_format_with_text_file_that_is_empty
+parsing_tester.test_check_format_with_text_file_that_has_empty_line
+parsing_tester.test_check_format_with_no_rover_and_no_instruction_set
+parsing_tester.test_check_format_with_one_rover_and_no_instruction_set
+parsing_tester.test_check_format_with_negative_maximum_coordinate
+parsing_tester.test_extract_coordinate
+parsing_tester.test_extract_rovers_and_its_instruction_set
