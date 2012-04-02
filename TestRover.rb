@@ -19,8 +19,6 @@ class TestRover
 		rover = Rover.new(nil, nil)
 		assert_equal nil, rover.start_coordinate
 		assert_equal nil, rover.start_direction
-		# assert_equal Coordinate.new.x, rover.start_coordinate.x
-		# assert_equal Coordinate.new.y, rover.start_coordinate.y
 
 		# ----------------------------------------------------------
 
@@ -41,6 +39,7 @@ class TestRover
 		maximum_coordinate = Coordinate.new(5, 5)
 		plateau = Plateau.new(maximum_coordinate)
 		rover.deploy(plateau)
+
 	end
 end
 

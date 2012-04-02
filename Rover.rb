@@ -9,7 +9,7 @@ require 'Coordinate'
 class Rover
 	attr_reader :start_coordinate
 	attr_reader :start_direction
-	# attr_accessor :facing_direction
+	# attr_accessor :current_direction
 	# attr_accessor :current_coordinate
 	# attr_accessor :plateau
 
@@ -17,5 +17,7 @@ class Rover
 		@start_coordinate = given_coordinate
 		@start_direction = given_direction
 	end
+
+
 
 end
