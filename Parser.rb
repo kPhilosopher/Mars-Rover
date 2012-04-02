@@ -79,7 +79,7 @@ class Parser
 
 	public
 
-	def extract_coordinate
+	def extract_maximum_coordinate
 		check_format if @lines == nil
 		temporary_x_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 1])
 		temporary_y_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 2])
@@ -93,7 +93,7 @@ class Parser
 
 	def extract_rovers_and_its_instruction_set
 		check_format if @lines == nil
-		extract_coordinate if @maximum_coordinate == nil
+		extract_maximum_coordinate if @maximum_coordinate == nil
 		rovers = []
 		temporary_rover = []
 		@lines.each { |line|
@@ -107,6 +107,7 @@ class Parser
 			elsif line[/[MLR]+/] #instructions
 				temporary_rover[2] = line[/[MLR]+/]
 				rovers << temporary_rover
+				temporary_rover = []
 			end
 		}
 		return rovers

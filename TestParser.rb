@@ -6,6 +6,7 @@
 require 'test/unit/assertions'
 require 'Parser'
 require 'Coordinate'
+require 'TestHelper'
 
 class TestParser 
 	include Test::Unit::Assertions
@@ -30,16 +31,6 @@ class TestParser
 		assert_nothing_raised(InputFormatError) do
 		 file.check_format
 		end
-	end
-
-	def create_and_delete_text_file(text_file_name, content)
-		File.open(text_file_name, 'w') do |file|  
-			file.print content
-  		end
-
-  		yield(text_file_name)
-
-  		File.delete(text_file_name)
 	end
 
 	def test_check_format_with_incorrect_cardinal_direction
@@ -346,29 +337,42 @@ class TestParser
 		end
 	end
 
-	def test_extract_coordinate
+	def test_extract_maximum_coordinate
 		file_path = File.expand_path(File.dirname(__FILE__) + '/input.txt')
 		file = Parser.new(file_path)
-		maximum_coordinate = file.extract_coordinate
+		maximum_coordinate = file.extract_maximum_coordinate
 		assert_equal true, maximum_coordinate.x >= 0
 		assert_equal true, maximum_coordinate.y >= 0
 	end
 
-	def test_extract_rovers_and_its_instruction_set
+	def test_extract_rovers_and_its_instruction_set_01
 		file = Parser.new(filePath = File.expand_path(File.dirname(__FILE__) + '/input.txt'))
 		rovers = file.extract_rovers_and_its_instruction_set
 		rovers.each { |rover|
 			assert_equal Coordinate, rover[0].class
-			assert_not_nil rover[1][/^\w$/]
+			assert_not_nil rover[1][/^[NSEW]$/]
 			assert_not_nil rover[2][/^[MLR]+$/]
 		}
 	end
 
-	def test_extract_coordinate_with_both_zero
+	def test_extract_rovers_and_its_instruction_set_02
+		text_file_name = "input_temp.txt"
+		content = "5 5\n1 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
+
+		create_and_delete_text_file(text_file_name, content) do |text_file_name|
+			file_path = File.expand_path(File.dirname(__FILE__) + "/" + text_file_name)
+			file = Parser.new(file_path)
+			rovers = file.extract_rovers_and_its_instruction_set
+			assert_equal rovers[0][2], "LMLMLMLMM"
+			assert_equal rovers[1][2], "MMRMMRMRRM"
+		end
+	end
+
+	def test_extract_maximum_coordinate_with_both_zero
 		# TODO
 	end
 
-	def test__extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
+	def test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
 		text_file_name = "input_with_error.txt"
 		content = "5 5\n1 8 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
@@ -385,6 +389,8 @@ class TestParser
 		    assert_equal "Rover coordinate cannot be larger than the maximum coordinate.", ex.message
 		end
 	end
+
+
 end
 
 # ------------------------------------------------------------------
@@ -410,6 +416,7 @@ parsing_tester.test_check_format_with_text_file_that_has_empty_line
 parsing_tester.test_check_format_with_no_rover_and_no_instruction_set
 parsing_tester.test_check_format_with_one_rover_and_no_instruction_set
 parsing_tester.test_check_format_with_negative_maximum_coordinate
-parsing_tester.test_extract_coordinate
-parsing_tester.test_extract_rovers_and_its_instruction_set
-parsing_tester.test__extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
+parsing_tester.test_extract_maximum_coordinate
+parsing_tester.test_extract_rovers_and_its_instruction_set_01
+parsing_tester.test_extract_rovers_and_its_instruction_set_02
+parsing_tester.test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
