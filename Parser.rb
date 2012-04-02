@@ -8,6 +8,9 @@ require 'Coordinate'
 class InputFormatError < Exception
 end
 
+class InputLogicError <Exception
+end
+
 class Parser
 
 	First_line = 0
@@ -65,7 +68,7 @@ class Parser
 	end
 
 	def check_format_rover_line(line)
-		return true if line[(/(^\d+) (\d+) (\w$)/)] #rover
+		return true if line[(/(^\d+) (\d+) ([NSEW]$)/)] #rover
 		return false
 	end
 
@@ -80,25 +83,29 @@ class Parser
 		check_format if @lines == nil
 		temporary_x_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 1])
 		temporary_y_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 2])
-		maximum_coordinate = Coordinate.new
+		@maximum_coordinate = Coordinate.new
 		if (temporary_y_coordinate >= 0) && (temporary_x_coordinate >= 0)
-			maximum_coordinate.x = temporary_x_coordinate
-			maximum_coordinate.y = temporary_y_coordinate
+			@maximum_coordinate.x = temporary_x_coordinate
+			@maximum_coordinate.y = temporary_y_coordinate
 		end
-		return maximum_coordinate
+		return @maximum_coordinate
 	end
 
 	def extract_rovers_and_its_instruction_set
 		check_format if @lines == nil
+		extract_coordinate if @maximum_coordinate == nil
 		rovers = []
 		temporary_rover = []
 		@lines.each { |line|
-			if line[(/(^\d+) (\d+) (\w$)/)] #rover
-				temporary_rover[0] = line[(/(^\d+) (\d+) (\w$)/), 1]
-				temporary_rover[1] = line[(/(^\d+) (\d+) (\w$)/), 2]
-				temporary_rover[2] = line[(/(^\d+) (\d+) (\w$)/), 3]
+			if line[(/(^\d+) (\d+) ([NSEW]$)/)] #rover
+				temporary_x_coordinate = Integer(line[(/(^\d+) (\d+) ([NSEW]$)/), 1])
+				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_x_coordinate > @maximum_coordinate.x
+				temporary_y_coordinate = Integer(line[(/(^\d+) (\d+) ([NSEW]$)/), 2])
+				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_y_coordinate > @maximum_coordinate.y
+				temporary_rover[0] = Coordinate.new(temporary_x_coordinate, temporary_y_coordinate)
+				temporary_rover[1] = line[(/(^\d+) (\d+) ([NSEW]$)/), 3]
 			elsif line[/[MLR]+/] #instructions
-				temporary_rover[3] = line[/[MLR]+/]
+				temporary_rover[2] = line[/[MLR]+/]
 				rovers << temporary_rover
 			end
 		}
