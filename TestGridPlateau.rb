@@ -32,7 +32,7 @@ class TestGridPlateau
 		given_coordinate = Coordinate.new(2, 3)
 		plateau = GridPlateau.new(given_coordinate)
 		coordinate_to_check = Coordinate.new(1, 1)
-		state = plateau.state_at(coordinate_to_check)
+		state = plateau.state_at_coordinate(coordinate_to_check)
 		assert_equal DefinedStates[1], state
 	end
 
@@ -40,8 +40,51 @@ class TestGridPlateau
 		given_coordinate = Coordinate.new(2, 3)
 		plateau = GridPlateau.new(given_coordinate)
 		coordinate_to_check = Coordinate.new(8, 1)
-		state = plateau.state_at(coordinate_to_check)
+		state = plateau.state_at_coordinate(coordinate_to_check)
+		assert_equal GridPlateau::OffThePlateau, state
+	end  
+
+	def test_state_at_coordinate_with_negative_coordinate
+		given_coordinate = Coordinate.new(2, 3)
+		plateau = GridPlateau.new(given_coordinate)
+		coordinate_to_check = Coordinate.new(8, -1)
+		state = plateau.state_at_coordinate(coordinate_to_check)
+		assert_equal GridPlateau::OffThePlateau, state
+	end  
+
+	def test_set_state_at_coordinate
+		given_coordinate = Coordinate.new(2, 3)
+		plateau = GridPlateau.new(given_coordinate)
+
+		coordinate = Coordinate.new(2, 2)
+		state = plateau.state_at_coordinate(coordinate)
 		assert_equal DefinedStates[1], state
+
+		assert_equal true, plateau.set_state_at_coordinate(DefinedStates[0], coordinate)
+		
+		assert_equal DefinedStates[0], plateau.grid_at_coordinate(coordinate).state
+	end
+
+	def test_set_state_at_coordinate_outside_maximum_coordinate
+		given_coordinate = Coordinate.new(2, 3)
+		plateau = GridPlateau.new(given_coordinate)
+
+		coordinate = Coordinate.new(2, 9)
+		state = plateau.state_at_coordinate(coordinate)
+		assert_equal GridPlateau::OffThePlateau, state
+
+		assert_equal false, plateau.set_state_at_coordinate(DefinedStates[0], coordinate)
+	end
+
+	def test_set_state_at_coordinate_with_negative_coordinate
+		given_coordinate = Coordinate.new(2, 3)
+		plateau = GridPlateau.new(given_coordinate)
+
+		coordinate = Coordinate.new(2, -2)
+		state = plateau.state_at_coordinate(coordinate)
+		assert_equal GridPlateau::OffThePlateau, state
+
+		assert_equal false, plateau.set_state_at_coordinate(DefinedStates[0], coordinate)
 	end
 end
 
@@ -52,5 +95,7 @@ plateau_tester.test_initialization
 plateau_tester.test_initialization_with_given_maximum_coordinate
 plateau_tester.test_state_at_coordinate
 plateau_tester.test_state_at_coordinate_outside_maximum_coordinate
-
-
+plateau_tester.test_state_at_coordinate_with_negative_coordinate
+plateau_tester.test_set_state_at_coordinate
+plateau_tester.test_set_state_at_coordinate_outside_maximum_coordinate
+plateau_tester.test_set_state_at_coordinate_with_negative_coordinate
