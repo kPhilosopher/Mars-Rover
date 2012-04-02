@@ -9,14 +9,10 @@ class InputFormatError < Exception
 end
 
 class Parser
-	attr_reader :lines
-	attr_reader :maximum_coordinate
-	attr_reader :rovers
 
 	First_line = 0
 
 	def initialize(text_file_path)
-		@maximum_coordinate = Coordinate.new
 		@file = File.open(text_file_path)
 	end
 
@@ -80,19 +76,21 @@ class Parser
 
 	public
 
-	def extract_coordinates
-		temporary_x_coordinate = Integer(lines[First_line][(/(^\d+) (\d+$)/), 1])
-		temporary_y_coordinate = Integer(lines[First_line][(/(^\d+) (\d+$)/), 2])
-
+	def extract_coordinate
+		check_format if @lines == nil
+		temporary_x_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 1])
+		temporary_y_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 2])
+		maximum_coordinate = Coordinate.new
 		if (temporary_y_coordinate >= 0) && (temporary_x_coordinate >= 0)
-			@maximum_coordinate.x = temporary_x_coordinate
-			@maximum_coordinate.y = temporary_y_coordinate
+			maximum_coordinate.x = temporary_x_coordinate
+			maximum_coordinate.y = temporary_y_coordinate
 		end
-		return @maximum_coordinate
+		return maximum_coordinate
 	end
 
 	def extract_rovers_and_its_instruction_set
-		@rovers = []
+		check_format if @lines == nil
+		rovers = []
 		temporary_rover = []
 		@lines.each { |line|
 			if line[(/(^\d+) (\d+) (\w$)/)] #rover
@@ -101,8 +99,9 @@ class Parser
 				temporary_rover[2] = line[(/(^\d+) (\d+) (\w$)/), 3]
 			elsif line[/[MLR]+/] #instructions
 				temporary_rover[3] = line[/[MLR]+/]
-				@rovers << temporary_rover
+				rovers << temporary_rover
 			end
 		}
+		return rovers
 	end
 end
