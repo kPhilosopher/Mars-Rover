@@ -7,8 +7,16 @@ require 'Coordinate'
 
 class Plateau
 	attr_reader :maximum_coordinate
-	
-	def initialize(maximum_coordinate)
+
+	def initialize(maximum_coordinate = Coordinate.new(0,0))
 		@maximum_coordinate = maximum_coordinate
+		setup
 	end
+
+	private
+
+	def setup
+
+	end
+	
 end
