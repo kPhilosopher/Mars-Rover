@@ -1,5 +1,8 @@
 #!/usr/bin/ruby
 
+# Created by Jinwoo Baek on 3/31/12.
+# Copyright (c) 2012 Jinwoo Baek. All rights reserved.
+
 class Coordinate
 	attr_accessor :x
 	attr_accessor :y

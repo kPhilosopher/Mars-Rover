@@ -1,5 +1,8 @@
 #!/usr/bin/ruby
 
+# Created by Jinwoo Baek on 3/31/12.
+# Copyright (c) 2012 Jinwoo Baek. All rights reserved.
+
 require 'test/unit/assertions'
 
 require 'Coordinate'
