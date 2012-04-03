@@ -12,7 +12,7 @@ class TestDeployer
 	include Test::Unit::Assertions
 
 	def test_parser_with_text_file_path
-		deployer = Deployer.new
+		deployer = Deployer.new(nil)
 		text_file_name = File.expand_path(File.dirname(__FILE__) + '/input.txt')
 		parser = deployer.parser_with_text_file_path(text_file_name)
 
@@ -20,7 +20,7 @@ class TestDeployer
 	end
 
 	def test_setup_rovers_with_instruction_set_01
-		deployer = Deployer.new
+		deployer = Deployer.new(nil)
 		text_file_name = File.expand_path(File.dirname(__FILE__) + '/input.txt')
 		deployer.parser_with_text_file_path(text_file_name)
 		deployer.setup_rovers_with_instruction_set
@@ -43,7 +43,7 @@ class TestDeployer
 		content = "5 5\n1 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
 		create_and_delete_text_file(text_file_name, content) do |text_file_name|
-			deployer = Deployer.new
+			deployer = Deployer.new(nil)
 			deployer.parser_with_text_file_path(text_file_name)
 			deployer.setup_rovers_with_instruction_set
 
@@ -64,7 +64,7 @@ class TestDeployer
 		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
 		create_and_delete_text_file(text_file_name, content) do |text_file_name|
-			deployer = Deployer.new
+			deployer = Deployer.new(nil)
 			deployer.parser_with_text_file_path(text_file_name)
 			deployer.setup_grid_plateau
 			assert_equal GridPlateau, deployer.plateau.class
@@ -78,7 +78,7 @@ class TestDeployer
 		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
 		create_and_delete_text_file(text_file_name, content) do |text_file_name|
-			deployer = Deployer.new
+			deployer = Deployer.new(nil)
 			deployer.parser_with_text_file_path(text_file_name)
 			deployer.setup_grid_plateau
 			deployer.setup_rovers_with_instruction_set
@@ -102,7 +102,7 @@ class TestDeployer
 		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
 		create_and_delete_text_file(text_file_name, content) do |text_file_name|
-			deployer = Deployer.new
+			deployer = Deployer.new(nil)
 			deployer.parser_with_text_file_path(text_file_name)
 			deployer.setup_grid_plateau
 			deployer.setup_rovers_with_instruction_set
@@ -128,6 +128,63 @@ class TestDeployer
 			assert_equal expected_final_direction, deployer.rovers[1].current_direction
 		end
 	end
+
+	def test_rovers_report
+		text_file_name = "input_temp.txt"
+		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
+
+		create_and_delete_text_file(text_file_name, content) do |text_file_name|
+			deployer = Deployer.new(nil)
+			deployer.parser_with_text_file_path(text_file_name)
+			deployer.setup_grid_plateau
+			deployer.setup_rovers_with_instruction_set
+			assert_equal true, deployer.deploy_rovers
+			deployer.execute_instructions
+
+			final_status = deployer.rovers_report
+
+			expected_final_coordinate = Coordinate.new(1, 3)
+			expected_final_direction = "N"
+			assert_equal expected_final_coordinate.x, final_status[0][0].x
+			assert_equal expected_final_coordinate.y, final_status[0][0].y
+			assert_equal expected_final_direction, final_status[0][1]
+
+			expected_final_coordinate = Coordinate.new(5, 1)
+			expected_final_direction = "E"
+			assert_equal expected_final_coordinate.x, final_status[1][0].x
+			assert_equal expected_final_coordinate.y, final_status[1][0].y
+			assert_equal expected_final_direction, final_status[1][1]
+		end
+	end
+
+	def test_output_final_status
+		text_file_name = "input_temp.txt"
+		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
+
+		create_and_delete_text_file(text_file_name, content) do |text_file_name|
+			deployer = Deployer.new(nil)
+			deployer.parser_with_text_file_path(text_file_name)
+			deployer.setup_grid_plateau
+			deployer.setup_rovers_with_instruction_set
+			assert_equal true, deployer.deploy_rovers
+			deployer.execute_instructions
+
+			deployer.output_final_status
+
+			lines = []
+			File.open("output.txt").each_line { |line|
+				lines << line
+			}
+
+			line_01 = lines[0][/(^\d+) (\d+) ([NSEW]$)/]
+			line_02 = lines[1][/(^\d+) (\d+) ([NSEW]$)/]
+
+			assert_equal "1 3 N", line_01
+			assert_equal "5 1 E", line_02
+
+			File.delete("output.txt")
+		end
+	end
 end
 
 # ------------------------------------------------------------------
@@ -139,3 +196,6 @@ deployer_tester.test_setup_rovers_with_instruction_set_02
 deployer_tester.test_setup_grid_plateau
 deployer_tester.test_deploy_rovers
 deployer_tester.test_execute_instructions
+deployer_tester.test_rovers_report
+deployer_tester.test_output_final_status
+
