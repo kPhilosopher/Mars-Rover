@@ -64,7 +64,7 @@ class TestRover
 		assert_equal true, rover.deploy(plateau)
 
 		instruction = "M"
-		assert_equal true, rover.execute_instruction(instruction)
+		rover.execute_instruction(instruction)
 		assert_equal instruction, rover.instruction
 		
 		expected_final_coordinate = Coordinate.new(1, 3)
@@ -85,7 +85,7 @@ class TestRover
 		assert_equal true, rover.deploy(plateau)
 
 		instruction = "L"
-		assert_equal true, rover.execute_instruction(instruction)
+		rover.execute_instruction(instruction)
 		assert_equal instruction, rover.instruction
 		
 		expected_final_coordinate = Coordinate.new(1, 2)
@@ -104,7 +104,7 @@ class TestRover
 		assert_equal true, rover.deploy(plateau)
 
 		instruction = "R"
-		assert_equal true, rover.execute_instruction(instruction)
+		rover.execute_instruction(instruction)
 		assert_equal instruction, rover.instruction
 		
 		expected_final_coordinate = Coordinate.new(1, 2)
@@ -112,6 +112,48 @@ class TestRover
 		assert_equal expected_final_coordinate.x, rover.current_coordinate.x
 		assert_equal expected_final_coordinate.y, rover.current_coordinate.y
 		assert_equal expected_final_direction, rover.current_direction
+	end
+
+	def test_execute_instruction_M_off_the_plateau
+		coordinate = Coordinate.new(1, 2)
+		direction = "N"
+		rover = Rover.new(coordinate, direction)
+		maximum_coordinate = Coordinate.new(2, 2)
+		plateau = GridPlateau.new(maximum_coordinate)
+		assert_equal true, rover.deploy(plateau)
+
+		instruction = "M"
+		rover.execute_instruction(instruction)
+		assert_equal instruction, rover.instruction
+		
+		expected_final_coordinate = Coordinate.new(1, 2)
+		expected_final_direction = "N"
+		assert_equal expected_final_coordinate.x, rover.current_coordinate.x
+		assert_equal expected_final_coordinate.y, rover.current_coordinate.y
+		assert_equal expected_final_direction, rover.current_direction
+	end
+
+	def test_execute_instruction_M_into_another_rover
+		coordinate = Coordinate.new(1, 2)
+		direction = "N"
+		rover1 = Rover.new(coordinate, direction)
+		coordinate = Coordinate.new(1, 1)
+		direction = "N"
+		rover2 = Rover.new(coordinate, direction)
+		maximum_coordinate = Coordinate.new(2, 2)
+		plateau = GridPlateau.new(maximum_coordinate)
+		assert_equal true, rover1.deploy(plateau)
+		assert_equal true, rover2.deploy(plateau)
+
+		instruction = "M"
+		rover2.execute_instruction(instruction)
+		assert_equal instruction, rover2.instruction
+		
+		expected_final_coordinate = Coordinate.new(1, 1)
+		expected_final_direction = "N"
+		assert_equal expected_final_coordinate.x, rover2.current_coordinate.x
+		assert_equal expected_final_coordinate.y, rover2.current_coordinate.y
+		assert_equal expected_final_direction, rover2.current_direction
 	end
 
 	def test_execute_instruction_set
@@ -126,7 +168,7 @@ class TestRover
 		assert_equal true, rover.deploy(plateau)
 
 		instruction = "LMLMLMLMM"
-		assert_equal true, rover.execute_instruction(instruction)
+		rover.execute_instruction(instruction)
 		assert_equal instruction, rover.instruction
 		
 		expected_final_coordinate = Coordinate.new(1, 3)
@@ -202,4 +244,5 @@ rover_tester.test_execute_instruction_L
 rover_tester.test_execute_instruction_R
 rover_tester.test_execute_instruction_set
 rover_tester.test_target_coordinate_with_direction
-
+rover_tester.test_execute_instruction_M_off_the_plateau
+rover_tester.test_execute_instruction_M_into_another_rover

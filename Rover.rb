@@ -44,9 +44,8 @@ class Rover
 					@current_coordinate = target_coordinate
 					@plateau.set_state_at_coordinate(GridStates::DefinedStates[1], previous_coordinate)
 				else
-					# TODO: deal with situation where you can't go.
-					# puts "There is something in the way of the rover with starting coordinates of "
-					# "The square root of 5 is #{Math.sqrt(5)}"
+					puts "Rover [(#{@start_coordinate.x}, #{@start_coordinate.y}), #{@start_direction}] overrided instruction to not fall off the plateau." if @plateau.state_at_coordinate(target_coordinate) == GridStates::DefinedStates[2]
+					puts "Rover [(#{@start_coordinate.x}, #{@start_coordinate.y}), #{@start_direction}] overrided instruction to not bump into an obstacle." if @plateau.state_at_coordinate(target_coordinate) == GridStates::DefinedStates[0]
 				end
 			elsif chr[/[LR]/]
 				if chr[/L/]
