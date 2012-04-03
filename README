@@ -1,0 +1,9 @@
+Jinwoo Baek's (agreee45@hotmail.com) code review project for TW.
+
+Mars Rovers
+
+To execute, please type in the following line in a console with the current directory set to the project directory.
+
+ruby Deployer.rb
+
+To change the input, please change the content of the input.txt file.
