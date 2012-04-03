@@ -25,3 +25,4 @@ class Grid
 		return true
 	end
 end
+

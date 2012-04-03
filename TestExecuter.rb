@@ -12,3 +12,4 @@ require 'TestParser'
 require 'TestCoordinate'
 require 'TestCardinalDirections'
 require 'TestOutputFormatter'
+

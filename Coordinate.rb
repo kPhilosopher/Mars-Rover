@@ -12,3 +12,4 @@ class Coordinate
 		@y = y_value
 	end
 end
+

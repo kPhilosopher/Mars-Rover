@@ -5,7 +5,6 @@
 
 require 'test/unit/assertions'
 
-
 def create_and_delete_text_file(text_file_name, content)
 	File.open(text_file_name, 'w') do |file|  
 		file.print content
@@ -15,3 +14,4 @@ def create_and_delete_text_file(text_file_name, content)
 
 	File.delete(text_file_name)
 end
+

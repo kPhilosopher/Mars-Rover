@@ -22,3 +22,4 @@ end
 
 plateau_tester = TestPlateau.new
 plateau_tester.test_initialization
+

@@ -5,6 +5,7 @@
 
 require 'Coordinate'
 
+# !!! must be subclassed
 class Plateau
 	attr_reader :maximum_coordinate
 
@@ -33,3 +34,4 @@ class Plateau
 
 	end
 end
+

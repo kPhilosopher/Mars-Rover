@@ -3,14 +3,9 @@
 # Created by Jinwoo Baek on 4/01/12.
 # Copyright (c) 2012 Jinwoo Baek. All rights reserved.
 
-# CardinalDirections = { :North => "N", 
-# 					   :East  => "E",
-# 					   :South => "S",
-# 					   :West  => "W" }.freeze
-
 class CardinalDirections
 
-	CardinalDirections = ["N", "E", "S", "W"]
+	CardinalDirections = ["N", "E", "S", "W"].freeze
 
 	def self.direction_when_rotated_left_with_direction(direction)
 		marked_index = self.marked_index_in_cardinal_array_with_direction(direction)
@@ -26,7 +21,7 @@ class CardinalDirections
 
 	def self.marked_index_in_cardinal_array_with_direction(direction)
 		index = 0
-		marked_index = 4
+		marked_index = 99
 		CardinalDirections.each do |cardinal_direction|
 			if direction == cardinal_direction
 				marked_index = index

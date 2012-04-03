@@ -12,6 +12,7 @@ class InputLogicError <Exception
 end
 
 class Parser
+	
 	attr_reader :lines
 	attr_reader :maximum_coordinate
 	attr_reader :rovers_and_its_instruction_set
@@ -119,5 +120,4 @@ class Parser
 		}
 	end
 end
-
 

@@ -9,6 +9,7 @@ require 'GridPlateau'
 require 'OutputFormatter'
 
 class Deployer
+
 	attr_reader :rovers
 	attr_reader :instructions
 	attr_reader :plateau
@@ -35,6 +36,7 @@ class Deployer
 			puts "Please fix the error in the input.txt before restarting the program."
 			exit
 		end
+
 		output_formatter = OutputFormatter.new
 		input_text = output_formatter.input_text_with_lines(@parser.lines)
 		puts "=========="
@@ -73,8 +75,7 @@ class Deployer
 
 	def execute_instructions
 		@rovers.each do |rover|
-			instruction = @instructions[rover.object_id]
-			rover.execute_instruction(instruction)
+			rover.execute_instruction(@instructions[rover.object_id])
 		end
 	end
 

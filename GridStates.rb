@@ -4,5 +4,8 @@
 # Copyright (c) 2012 Jinwoo Baek. All rights reserved.
 
 class GridStates
+
 	DefinedStates = [:occupied, :unoccupied, :off_the_plateau].freeze
+	
 end
+

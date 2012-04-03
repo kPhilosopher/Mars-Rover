@@ -4,7 +4,6 @@
 # Copyright (c) 2012 Jinwoo Baek. All rights reserved.
 
 require 'test/unit/assertions'
-
 require 'Coordinate'
 
 class TestCoordinate
@@ -40,7 +39,6 @@ class TestCoordinate
 		assert_equal 300, coordinate.y
 	end
 end
-
 
 # ------------------------------------------------------------------
 

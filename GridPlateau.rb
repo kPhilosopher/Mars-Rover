@@ -42,3 +42,4 @@ class GridPlateau < Plateau
 		grid = @grids[coordinate.x][coordinate.y]
 	end
 end
+
