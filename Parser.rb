@@ -12,6 +12,9 @@ class InputLogicError <Exception
 end
 
 class Parser
+	attr_reader :lines
+	attr_reader :maximum_coordinate
+	attr_reader :rovers_and_its_instruction_set
 
 	First_line = 0
 
@@ -47,6 +50,8 @@ class Parser
 			break if broke_out == true
 		}
 
+		@lines = temporary_lines
+
 		if !first_line_parsed
 			raise InputFormatError.new("Expected a maximum coordinate information line with correct format.") if broke_out == true
 			raise InputFormatError.new("File is empty.")
@@ -55,9 +60,8 @@ class Parser
 			raise InputFormatError.new("Expected a rover information line with correct format.")
 		end
 		if instruction_set_expected || (broke_out && rover_line_parsed == true)
-			raise InputFormatError.new("Expected a instruction information line with correct format.")
+			raise InputFormatError.new("Expected an instruction information line with correct format.")
 		end
-		@lines = temporary_lines
 	end
 
 	private
@@ -83,33 +87,37 @@ class Parser
 		check_format if @lines == nil
 		temporary_x_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 1])
 		temporary_y_coordinate = Integer(@lines[First_line][(/(^\d+) (\d+$)/), 2])
-		@maximum_coordinate = Coordinate.new
-		if (temporary_y_coordinate >= 0) && (temporary_x_coordinate >= 0)
-			@maximum_coordinate.x = temporary_x_coordinate
-			@maximum_coordinate.y = temporary_y_coordinate
-		end
-		return @maximum_coordinate
+		@maximum_coordinate = Coordinate.new(temporary_x_coordinate, temporary_y_coordinate)
 	end
 
 	def extract_rovers_and_its_instruction_set
 		check_format if @lines == nil
 		extract_maximum_coordinate if @maximum_coordinate == nil
-		rovers = []
+		@rovers_and_its_instruction_set = []
 		temporary_rover = []
 		@lines.each { |line|
-			if line[(/(^\d+) (\d+) ([NSEW]$)/)] #rover
+			if line[/(^\d+) (\d+) ([NSEW]$)/] #rover
 				temporary_x_coordinate = Integer(line[(/(^\d+) (\d+) ([NSEW]$)/), 1])
-				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_x_coordinate > @maximum_coordinate.x
 				temporary_y_coordinate = Integer(line[(/(^\d+) (\d+) ([NSEW]$)/), 2])
-				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_y_coordinate > @maximum_coordinate.y
+				
 				temporary_rover[0] = Coordinate.new(temporary_x_coordinate, temporary_y_coordinate)
+				
+				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_x_coordinate > @maximum_coordinate.x
+				raise InputLogicError.new("Rover coordinate cannot be larger than the maximum coordinate.") if temporary_y_coordinate > @maximum_coordinate.y
+				@rovers_and_its_instruction_set.each do |previous_rover|
+					if (previous_rover[0].x == temporary_rover[0].x) && (previous_rover[0].y == temporary_rover[0].y)
+						raise InputLogicError.new("Multiple rovers have a same starting coordinate.")
+					end
+				end
+
 				temporary_rover[1] = line[(/(^\d+) (\d+) ([NSEW]$)/), 3]
 			elsif line[/[MLR]+/] #instructions
 				temporary_rover[2] = line[/[MLR]+/]
-				rovers << temporary_rover
+				@rovers_and_its_instruction_set << temporary_rover
 				temporary_rover = []
 			end
 		}
-		return rovers
 	end
 end
+
+

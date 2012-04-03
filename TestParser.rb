@@ -119,7 +119,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-		    assert_equal "Expected a instruction information line with correct format.", ex.message
+		    assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 
@@ -137,7 +137,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-		    assert_equal "Expected a instruction information line with correct format.", ex.message
+		    assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 
@@ -155,7 +155,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-			assert_equal "Expected a instruction information line with correct format.", ex.message
+			assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 
@@ -209,7 +209,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-		    assert_equal "Expected a instruction information line with correct format.", ex.message
+		    assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 
@@ -227,7 +227,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-		    assert_equal "Expected a instruction information line with correct format.", ex.message
+		    assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 	def test_check_format_with_rover_line_and_instruction_line_mixed_up
@@ -316,7 +316,7 @@ class TestParser
 		    end
 
 		    assert_equal InputFormatError, ex.class
-		    assert_equal "Expected a instruction information line with correct format.", ex.message
+		    assert_equal "Expected an instruction information line with correct format.", ex.message
 		end
 	end
 
@@ -340,14 +340,16 @@ class TestParser
 	def test_extract_maximum_coordinate
 		file_path = File.expand_path(File.dirname(__FILE__) + '/input.txt')
 		file = Parser.new(file_path)
-		maximum_coordinate = file.extract_maximum_coordinate
+		file.extract_maximum_coordinate
+		maximum_coordinate = file.maximum_coordinate
 		assert_equal true, maximum_coordinate.x >= 0
 		assert_equal true, maximum_coordinate.y >= 0
 	end
 
 	def test_extract_rovers_and_its_instruction_set_01
 		file = Parser.new(filePath = File.expand_path(File.dirname(__FILE__) + '/input.txt'))
-		rovers = file.extract_rovers_and_its_instruction_set
+		file.extract_rovers_and_its_instruction_set
+		rovers = file.rovers_and_its_instruction_set
 		rovers.each { |rover|
 			assert_equal Coordinate, rover[0].class
 			assert_not_nil rover[1][/^[NSEW]$/]
@@ -362,17 +364,14 @@ class TestParser
 		create_and_delete_text_file(text_file_name, content) do |text_file_name|
 			file_path = File.expand_path(File.dirname(__FILE__) + "/" + text_file_name)
 			file = Parser.new(file_path)
-			rovers = file.extract_rovers_and_its_instruction_set
+			file.extract_rovers_and_its_instruction_set
+			rovers = file.rovers_and_its_instruction_set
 			assert_equal rovers[0][2], "LMLMLMLMM"
 			assert_equal rovers[1][2], "MMRMMRMRRM"
 		end
 	end
 
-	def test_extract_maximum_coordinate_with_both_zero
-		# TODO
-	end
-
-	def test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
+	def test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates_01
 		text_file_name = "input_with_error.txt"
 		content = "5 5\n1 8 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
 
@@ -390,7 +389,23 @@ class TestParser
 		end
 	end
 
+	def test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates_02
+		text_file_name = "input_with_error.txt"
+		content = "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM\n1 2 W\nLMLMM"
 
+		create_and_delete_text_file(text_file_name, content) do |text_file_name|
+			file_path = File.expand_path(File.dirname(__FILE__) + "/" + text_file_name)
+			file = Parser.new(file_path)
+			
+		    begin
+		    	file.extract_rovers_and_its_instruction_set
+		    rescue InputLogicError => ex
+		    end
+
+		    assert_equal InputLogicError, ex.class
+		    assert_equal "Multiple rovers have a same starting coordinate.", ex.message
+		end
+	end
 end
 
 # ------------------------------------------------------------------
@@ -419,4 +434,5 @@ parsing_tester.test_check_format_with_negative_maximum_coordinate
 parsing_tester.test_extract_maximum_coordinate
 parsing_tester.test_extract_rovers_and_its_instruction_set_01
 parsing_tester.test_extract_rovers_and_its_instruction_set_02
-parsing_tester.test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates
+parsing_tester.test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates_01
+parsing_tester.test_extract_rovers_and_its_instruction_set_with_incorrect_rover_starting_coordinates_02
