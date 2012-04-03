@@ -5,7 +5,7 @@
 
 require 'Parser'
 require 'Rover'
-require 'Plateau'
+require 'GridPlateau'
 
 class Deployer
 	attr_reader :rovers
@@ -14,13 +14,13 @@ class Deployer
 
 	# the initial method should allow the user to input the text file through the console.
 	
-	def parser_with_text_file_path(text_file_path)
-		@parser = Parser.new(text_file_path)
+	def parser_with_text_file_path(text_file_name)
+		@parser = Parser.new(text_file_name)
 	end
 
-	def setup_plateau
+	def setup_grid_plateau
 		maximum_coordinate = @parser.extract_maximum_coordinate
-		@plateau = Plateau.new(maximum_coordinate)
+		@plateau = GridPlateau.new(maximum_coordinate)
 	end
 
 	# TODO: have to create a method that executes parser setup before the following method
@@ -38,5 +38,17 @@ class Deployer
 		end
 	end
 
+	def deploy_rovers
+		@rovers.each do |rover|
+			return false if !rover.deploy(@plateau)
+		end
+		return true
+	end
 
+	def execute_instructions
+		@rovers.each do |rover|
+			instruction = @instructions[rover.object_id]
+			rover.execute_instruction(instruction)
+		end
+	end
 end
