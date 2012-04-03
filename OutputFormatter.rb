@@ -1,11 +1,19 @@
 #!/usr/bin/ruby
 
-# Created by Jinwoo Baek on 3/31/12.
+# Created by Jinwoo Baek on 4/02/12.
 # Copyright (c) 2012 Jinwoo Baek. All rights reserved.
 
 require 'Coordinate'
 
 class OutputFormatter
+
+	def input_text_with_lines(lines)
+		input_text = ""
+		lines.each do |line|
+			input_text += line
+		end
+		return input_text
+	end
 
 	def output_text_with_report(report)
 		output_text = ""
