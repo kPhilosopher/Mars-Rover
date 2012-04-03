@@ -38,7 +38,7 @@ class GridPlateau < Plateau
 	end
 
 	def grid_at_coordinate(coordinate)
-		return nil if coordinate.x > @maximum_coordinate.x || coordinate.y > @maximum_coordinate.y || coordinate.x < 0 || coordinate.y < 0
+		return nil if (coordinate.x > @maximum_coordinate.x) || (coordinate.y > @maximum_coordinate.y) || (coordinate.x < 0) || (coordinate.y < 0)
 		grid = @grids[coordinate.x][coordinate.y]
 	end
 end

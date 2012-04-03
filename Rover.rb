@@ -9,6 +9,7 @@ require 'Plateau'
 require 'GridStates'
 
 class Rover
+	
 	attr_reader :start_coordinate
 	attr_reader :start_direction
 	attr_reader :current_direction
