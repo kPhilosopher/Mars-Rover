@@ -5,10 +5,9 @@
 
 require 'Plateau'
 require 'Grid'
+require 'GridStates'
 
 class GridPlateau < Plateau
-
-	OffThePlateau = :off_the_plateau
 
 	attr_reader :grids
 
@@ -28,7 +27,7 @@ class GridPlateau < Plateau
 
 	def state_at_coordinate(coordinate)
 		grid = grid_at_coordinate(coordinate)
-		return OffThePlateau if grid == nil
+		return GridStates::DefinedStates[2] if grid == nil
 		return grid.state
 	end
 
