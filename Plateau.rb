@@ -18,5 +18,18 @@ class Plateau
 	def setup
 
 	end
-	
+
+	public 
+
+	def state_at_coordinate(coordinate)
+
+	end
+
+	def set_state_at_coordinate(new_state, coordinate)
+
+	end
+
+	def grid_at_coordinate(coordinate)
+
+	end
 end

@@ -16,10 +16,6 @@ class TestPlateau
 		assert_equal 0, plateau.maximum_coordinate.x
 		assert_equal 0, plateau.maximum_coordinate.y
 	end
-
-	def test_state_of_coordinate
-		
-	end
 end
 
 # ------------------------------------------------------------------
