@@ -15,8 +15,8 @@ class Parser
 
 	First_line = 0
 
-	def initialize(text_file_path)
-		@file = File.open(text_file_path)
+	def initialize(text_file_name)
+		@file = File.open(text_file_name)
 	end
 
 	def check_format
