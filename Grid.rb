@@ -3,11 +3,7 @@
 # Created by Jinwoo Baek on 4/01/12.
 # Copyright (c) 2012 Jinwoo Baek. All rights reserved.
 
-class UndefinedStateError < Exception
-
-end
-
-DefinedStates = [:occupied, :unoccupied].freeze
+require 'GridStates'
 
 class Grid
 	attr_reader :state
@@ -16,15 +12,16 @@ class Grid
 		@state = state
 	end
 
-	def setState(newState)
+	def set_state(new_state)
 		defined_state = false
-		DefinedStates.each do |state|
-			if state == newState
+		GridStates::DefinedStates.each do |state|
+			if state == new_state
 				defined_state = true
 				break
 			end
 		end
-		raise UndefinedStateError.new("The given state is undefined.") unless defined_state
-		@state = newState
+		return false unless defined_state
+		@state = new_state
+		return true
 	end
 end

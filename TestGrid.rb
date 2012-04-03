@@ -23,7 +23,7 @@ class TestGrid
 		grid = Grid.new
 		assert_equal :unoccupied, grid.state
 
-		grid.setState(:occupied)
+		assert_equal true, grid.set_state(:occupied)
 
 		assert_equal :occupied, grid.state
 	end
@@ -32,14 +32,9 @@ class TestGrid
 		grid = Grid.new
 		assert_equal :unoccupied, grid.state
 
-		begin
-			grid.setState(:blaaa)
-		rescue Exception => ex
-			
-		end
+		assert_equal false, grid.set_state(:blaaa)
 
-		assert_equal UndefinedStateError, ex.class
-		assert_equal "The given state is undefined.", ex.message
+		assert_equal :unoccupied, grid.state
 	end
 end
 
