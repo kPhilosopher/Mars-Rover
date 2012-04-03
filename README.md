@@ -9,6 +9,10 @@ To execute, please type in the following line in a console with the current dire
 
 To change the input, please change the content of the input.txt file.
 
+To execute tests, please type in the following line in a console with the current directory set to the project directory.
+
+    ruby TestExecuter.rb
+
 Design Decisions
 --------------
 
